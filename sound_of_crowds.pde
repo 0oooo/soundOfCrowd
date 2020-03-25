@@ -74,5 +74,9 @@ synchronized void draw() {
   //}
 
   //bubbleManager.draw();
-  detector.draw(); 
+  detector.draw(true); 
+  
+  if(frameCount % 480 == 0){
+    detector.getDepthList(); 
+  }
 }
