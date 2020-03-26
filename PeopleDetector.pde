@@ -13,8 +13,8 @@ PImage depthImg;
 
 class PeopleDetector {
 
-  private final int THRESHOLD_DEPTH_DETECTION_MAX = 900;
-  private final int THRESHOLD_DEPTH_DETECTION_MIN = 100;
+  private final int THRESHOLD_DEPTH_DETECTION_MAX = 1000;
+  private final int THRESHOLD_DEPTH_DETECTION_MIN = 0;
   private final double THRESHOLD_PIXELS_NOT_IN_DETECTED_ZONE = 0.3; 
   private final int numberOfPixels;
 
@@ -22,8 +22,7 @@ class PeopleDetector {
 
   private int[] rawDepth;              // depth captured by the kinect
   private int[] scaledDepthPerPixel;   // depth transformed following the threshold
-    private int[] depthAsListOfBeats;    // depth transformed into a list of X beats   
-  
+  private int[] depthAsListOfBeats;    // depth transformed into a list of X beats   
 
   public PeopleDetector(int numberOfBeats) {
     numberOfPixels = kinect.width * kinect.height;
@@ -42,24 +41,28 @@ class PeopleDetector {
 
     int maxNumberOfPixelsOutZone = (int) Math.round(totalPixelsToExplore * THRESHOLD_PIXELS_NOT_IN_DETECTED_ZONE);
     int numberOfPixelOutZone = 0; 
+    int pixelsWithADepth = 0; 
+    int totalDepthOfPixelWithADepth = 0; 
     for (int i = startColumnIndex; i < endColumnIndex; i++) {
       for (int j = 0; j < snapOfDepthImage.length; j++)
         if (snapOfDepthImage[j][i] == 0) {
           numberOfPixelOutZone++;
+        }else{
+          totalDepthOfPixelWithADepth += snapOfDepthImage[j][i];
+          pixelsWithADepth++; 
         }
       if (numberOfPixelOutZone > maxNumberOfPixelsOutZone) {
         return 0;
       }
     }
-    return 1;   //todo replae the 1 by mean of depth
+    int meanOfDepth = Math.round(totalDepthOfPixelWithADepth / pixelsWithADepth); 
+    return meanOfDepth;   //todo replae the 1 by mean of depth
   }
 
 
   public void getMainDepth() {
 
     int[][] imageMatrix = make2dArrayDepth();
-
-    print2DArray(imageMatrix);
 
     int totalWidth = kinect.width; 
     int totalHeight = kinect.height; 
@@ -69,6 +72,8 @@ class PeopleDetector {
     for (int x = 0, i = 0; x < totalWidth && i < numberOfBeats; x += areaWidth, i++) {  
       depthAsListOfBeats[i] = getMainDepthPerZone(x, x + areaWidth, totalPixelToExplore, imageMatrix);
     }
+    
+    printDepth();
   }
 
   private int[][] make2dArrayDepth() {
@@ -85,6 +90,14 @@ class PeopleDetector {
 
     return depth2dArray;
   }
+  
+  private int getDepthScaled(int currentDepth){
+    int maxScaledDepth = numberOfBeats; 
+    int maxMinusMin = THRESHOLD_DEPTH_DETECTION_MAX - THRESHOLD_DEPTH_DETECTION_MIN; 
+    int currentDepthMinusMin = currentDepth - THRESHOLD_DEPTH_DETECTION_MIN;
+    
+    return Math.round((currentDepthMinusMin * maxScaledDepth) / maxMinusMin); 
+  }
 
   public void draw(boolean showVideo) {
     // Get the raw depth as array of integers
@@ -92,7 +105,8 @@ class PeopleDetector {
 
     for (int i=0; i < rawDepth.length; i++) {
       if (rawDepth[i] >= THRESHOLD_DEPTH_DETECTION_MIN && rawDepth[i] <= THRESHOLD_DEPTH_DETECTION_MAX) {
-        scaledDepthPerPixel[i] = 1; // to do = replace that by the depth
+        //scaledDepthPerPixel[i] = 1; // to do = replace that by the depth
+        scaledDepthPerPixel[i] = getDepthScaled(rawDepth[i]);
         depthImg.pixels[i] = color(255);
       } else {
         scaledDepthPerPixel[i] = 0; 
@@ -131,6 +145,14 @@ class PeopleDetector {
   public void printRawDepth() {
     System.out.println("");
     for (int d : rawDepth) {
+      System.out.print(d + " ");
+    }
+    System.out.println("");
+  }
+  
+  public void printDepthPerPixel(){
+    System.out.println("");
+    for (int d : scaledDepthPerPixel) {
       System.out.print(d + " ");
     }
     System.out.println("");
