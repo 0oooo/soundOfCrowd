@@ -8,6 +8,7 @@ float PERCENTAGE_BUBBLE_PROJECTION = 0.7;
 int BUBBLE_PROJECTION_HEIGHT = round(PROJECTION_HEIGHT * PERCENTAGE_BUBBLE_PROJECTION);
 int GREY_AREA = 10;
 int MELODY_VISUALISATION_HEIHGT = PROJECTION_HEIGHT - (GREY_AREA + BUBBLE_PROJECTION_HEIGHT);
+int NUMBER_OF_BEATS = 8; 
 
 MelodyVisualisation melodyVisualisation;
 BubbleManager bubbleManager;
@@ -32,11 +33,11 @@ void setupBubbles(){
 }
 
 void setupDetector(){
-  detector = new PeopleDetector(); 
   kinect = new Kinect(this);
   kinect.initDepth();
         // Blank image
   depthImg = new PImage(kinect.width, kinect.height);
+    detector = new PeopleDetector(NUMBER_OF_BEATS); 
 }
 
 //TODO delete
@@ -55,9 +56,7 @@ void setup() {
   size(640, 700);
   setupMelodyVisualisation();
   setupBubbles();
-  setupDetector(); 
-  
-
+  setupDetector(); //todo add debug option where no kinect was detected
 }
 
 synchronized void draw() {
@@ -74,9 +73,11 @@ synchronized void draw() {
   //}
 
   //bubbleManager.draw();
-  detector.draw(true); 
+  //detector.draw(false); 
   
   if(frameCount % 480 == 0){
-    detector.getDepthList(); 
+    detector.draw(false); 
+    //detector.getDepthList();
+    detector.printDepth(); 
   }
 }
