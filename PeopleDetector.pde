@@ -33,10 +33,6 @@ class PeopleDetector {
     depthAsListOfBeats = new int[numberOfBeats];
   }
 
-  public int[] getDepthList() {
-    return depthAsListOfBeats;
-  }
-
   public int getMainDepthPerZone(int startColumnIndex, int endColumnIndex, int totalPixelsToExplore, int[][] snapOfDepthImage) {
 
     int maxNumberOfPixelsOutZone = (int) Math.round(totalPixelsToExplore * THRESHOLD_PIXELS_NOT_IN_DETECTED_ZONE);
@@ -60,7 +56,7 @@ class PeopleDetector {
   }
 
 
-  public void getMainDepth() {
+  public int[] getMainDepth() {
 
     int[][] imageMatrix = make2dArrayDepth();
 
@@ -74,6 +70,8 @@ class PeopleDetector {
     }
     
     printDepth();
+    
+    return depthAsListOfBeats;
   }
 
   private int[][] make2dArrayDepth() {
@@ -95,7 +93,7 @@ class PeopleDetector {
     int maxScaledDepth = numberOfBeats; 
     int maxMinusMin = THRESHOLD_DEPTH_DETECTION_MAX - THRESHOLD_DEPTH_DETECTION_MIN; 
     int currentDepthMinusMin = currentDepth - THRESHOLD_DEPTH_DETECTION_MIN;
-    
+    //todo replace by map : round(map(currentDepth, THRESHOLD_DEPTH_DETECTION_MIN, THRESHOLD_DEPTH_DETECTION_MAX, 1, 8))
     return Math.round((currentDepthMinusMin * maxScaledDepth) / maxMinusMin); 
   }
 

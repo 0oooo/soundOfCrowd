@@ -14,18 +14,14 @@ MelodyVisualisation melodyVisualisation;
 BubbleManager bubbleManager;
 PeopleDetector detector; 
 
-
-
-//TODO delete
-//int[] fakePeopleList = { 1, 4, 3, 0, 0, 4, 1, 8};
-int[] fakePeopleList = { 8, 1, 2, 3, 4, 5, 6, 7};
+int[] peopleToBeat; 
 
 void setupMelodyVisualisation(){
   int startMelodyVisualisation = PROJECTION_HEIGHT - MELODY_VISUALISATION_HEIHGT - GREY_AREA;
   int endMelodyVisualisation = TOTAL_HEIGHT;
   int widthMelodyVisualisation = TOTAL_WIDTH;
   melodyVisualisation = new MelodyVisualisation(startMelodyVisualisation, endMelodyVisualisation, widthMelodyVisualisation);
-  melodyVisualisation.updateListOfPeople(fakePeopleList); 
+  melodyVisualisation.updateListOfPeople(peopleToBeat); 
 }
 
 void setupBubbles(){
@@ -37,7 +33,7 @@ void setupDetector(){
   kinect.initDepth();
         // Blank image
   depthImg = new PImage(kinect.width, kinect.height);
-    detector = new PeopleDetector(NUMBER_OF_BEATS); 
+  detector = new PeopleDetector(NUMBER_OF_BEATS); 
 }
 
 //TODO delete
@@ -54,18 +50,20 @@ synchronized void randomBubbleGenerator(){
 
 void setup() {
   size(640, 700);
+  peopleToBeat = new int[NUMBER_OF_BEATS];
   setupMelodyVisualisation();
   setupBubbles();
   setupDetector(); //todo add debug option where no kinect was detected
 }
 
 synchronized void draw() {
-  //background(255);
-  //strokeWeight(1);
-  //stroke(126);
-  //line(0, BUBBLE_PROJECTION_HEIGHT, 640, BUBBLE_PROJECTION_HEIGHT);
+  background(255);
+  strokeWeight(1);
+  stroke(126);
+  line(0, BUBBLE_PROJECTION_HEIGHT, 640, BUBBLE_PROJECTION_HEIGHT);
 
-  ////melodyVisualisation.draw();
+  melodyVisualisation.draw();
+
 
   //if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
   //   thread("randomBubbleGenerator");
@@ -73,10 +71,9 @@ synchronized void draw() {
   //}
 
   //bubbleManager.draw();
-  //detector.draw(false); 
   
-   detector.draw(true); 
+  detector.draw(false); 
   if(frameCount % 480 == 0){
-    detector.getMainDepth();
+    peopleToBeat = detector.getMainDepth(); // todo fix me :)   
   }
 }
