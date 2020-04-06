@@ -1,6 +1,9 @@
 import org.openkinect.freenect.*;
 import org.openkinect.processing.*;
 
+import SimpleOpenNI.*; // For interfacing with the Kinect
+
+
 int TOTAL_HEIGHT = 700;
 int TOTAL_WIDTH = 640;
 int PROJECTION_HEIGHT = TOTAL_HEIGHT;
@@ -8,24 +11,29 @@ float PERCENTAGE_BUBBLE_PROJECTION = 0.7;
 int BUBBLE_PROJECTION_HEIGHT = round(PROJECTION_HEIGHT * PERCENTAGE_BUBBLE_PROJECTION);
 int GREY_AREA = 10;
 int MELODY_VISUALISATION_HEIHGT = PROJECTION_HEIGHT - (GREY_AREA + BUBBLE_PROJECTION_HEIGHT);
-int NUMBER_OF_BEATS = 8; 
+int NUMBER_OF_BEATS = 8;
 
 MelodyVisualisation melodyVisualisation;
 BubbleManager bubbleManager;
-PeopleDetector detector; 
+PeopleDetector detector;
 
-int[] peopleToBeat; 
+int[] peopleToBeat;
 
 void setupMelodyVisualisation(){
   int startMelodyVisualisation = PROJECTION_HEIGHT - MELODY_VISUALISATION_HEIHGT - GREY_AREA;
   int endMelodyVisualisation = TOTAL_HEIGHT;
   int widthMelodyVisualisation = TOTAL_WIDTH;
   melodyVisualisation = new MelodyVisualisation(startMelodyVisualisation, endMelodyVisualisation, widthMelodyVisualisation);
-  melodyVisualisation.updateListOfPeople(peopleToBeat); 
+  melodyVisualisation.updateListOfPeople(peopleToBeat);
 }
 
 void setupBubbles(){
   bubbleManager = new BubbleManager(BUBBLE_PROJECTION_HEIGHT);
+}
+
+boolean isKinectDetected(){ //<>//
+  Kinect detectKinect = new Kinect(this);
+  return (detectKinect == null);
 }
 
 void setupDetector(){
@@ -33,7 +41,7 @@ void setupDetector(){
   kinect.initDepth();
         // Blank image
   depthImg = new PImage(kinect.width, kinect.height);
-  detector = new PeopleDetector(NUMBER_OF_BEATS); 
+  detector = new PeopleDetector(NUMBER_OF_BEATS);
 }
 
 //TODO delete
@@ -53,7 +61,10 @@ void setup() {
   peopleToBeat = new int[NUMBER_OF_BEATS];
   setupMelodyVisualisation();
   setupBubbles();
-  setupDetector(); //todo add debug option where no kinect was detected
+  if (isKinectDetected()){
+    
+  }
+
 }
 
 synchronized void draw() {
@@ -71,9 +82,9 @@ synchronized void draw() {
   //}
 
   //bubbleManager.draw();
-  
-  detector.draw(false); 
+
+  detector.draw(false);
   if(frameCount % 480 == 0){
-    peopleToBeat = detector.getMainDepth(); // todo fix me :)   
+    peopleToBeat = detector.getMainDepth(); // todo fix me :)
   }
 }
