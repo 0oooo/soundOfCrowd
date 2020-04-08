@@ -10,11 +10,15 @@ class BubbleManager{
   private final int MAX_NUMBER_OF_BUBBLES = 3;
   private int numberOfBubbles; 
   private int maxHeightForBubbles;
+  private boolean debugOn; 
+  private boolean printedDebugMode; 
   
   public BubbleManager(int bottomBubbleProjection){
     numberOfBubbles = 0; 
     maxHeightForBubbles = bottomBubbleProjection;
     bubbles = new ArrayList<Bubble>(); 
+    debugOn = false; 
+    printedDebugMode = false; 
   }
   
   private void removeFirstBubble(){
@@ -26,6 +30,18 @@ class BubbleManager{
     numberOfBubbles = 0; 
   }
   
+ public void setDebugOn(){
+   if(printedDebugMode == false){
+      println("Bubble Manager, debug mode on"); 
+      printedDebugMode = true; 
+    }
+    this.debugOn = true; 
+  }
+  
+  public void setDebugOff(){
+    this.debugOn = false;
+  }
+  
   public void addBubble(Bubble bubble){
     //bubbles.add(bubble); 
     //numberOfBubbles++;
@@ -33,8 +49,10 @@ class BubbleManager{
     //  removeFirstBubble(); 
     //}
     
-    //print("Number of bubbles = " + numberOfBubbles); 
-    //print("MAX_NUMBER_OF_BUBBLES = " + MAX_NUMBER_OF_BUBBLES); 
+    if(debugOn){
+      print("Number of bubbles = " + numberOfBubbles); 
+      print("MAX_NUMBER_OF_BUBBLES = " + MAX_NUMBER_OF_BUBBLES);
+    }
     
     if(numberOfBubbles < MAX_NUMBER_OF_BUBBLES){
       bubbles.add(bubble); 

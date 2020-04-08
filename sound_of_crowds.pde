@@ -1,8 +1,7 @@
 import org.openkinect.freenect.*;
 import org.openkinect.processing.*;
 
-import SimpleOpenNI.*; // For interfacing with the Kinect
-
+boolean debugOn = false; 
 
 int TOTAL_HEIGHT = 700;
 int TOTAL_WIDTH = 640;
@@ -17,7 +16,40 @@ MelodyVisualisation melodyVisualisation;
 BubbleManager bubbleManager;
 PeopleDetector detector;
 
+boolean hasKinect; 
+
 int[] peopleToBeat;
+
+//------------------------------------------------------------
+//-------------------------KINECT SETUP-----------------------
+//------------------------------------------------------------
+
+void setupKinectDetection(){
+   println("Looking for a kinect"); 
+   kinect = new Kinect(this);
+   
+   if(kinect.numDevices() > 0){ 
+     println("Setting up the kinect detection");
+     hasKinect = true; 
+     kinect.initDepth();
+     // Blank image
+     depthImg = new PImage(kinect.width, kinect.height);
+     detector = new PeopleDetector(NUMBER_OF_BEATS);
+   }else{
+     println("No kinect has been found"); 
+     setupDefaultPeople();
+   } 
+} //<>//
+
+void setupDefaultPeople(){
+  println("Setting up the default array of people."); 
+  int[] defaultPeople = {0, 4, 5, 2, 7, 1, 8, 2};
+  peopleToBeat = defaultPeople;
+}
+
+//------------------------------------------------------------
+//-------------------PEOPLE PLAYER SETUP----------------------
+//------------------------------------------------------------
 
 void setupMelodyVisualisation(){
   int startMelodyVisualisation = PROJECTION_HEIGHT - MELODY_VISUALISATION_HEIHGT - GREY_AREA;
@@ -27,21 +59,12 @@ void setupMelodyVisualisation(){
   melodyVisualisation.updateListOfPeople(peopleToBeat);
 }
 
+//------------------------------------------------------------
+//-------------------------BUBBLES SETUP-----------------------
+//------------------------------------------------------------
+
 void setupBubbles(){
   bubbleManager = new BubbleManager(BUBBLE_PROJECTION_HEIGHT);
-}
-
-boolean isKinectDetected(){ //<>//
-  Kinect detectKinect = new Kinect(this);
-  return (detectKinect == null);
-}
-
-void setupDetector(){
-  kinect = new Kinect(this);
-  kinect.initDepth();
-        // Blank image
-  depthImg = new PImage(kinect.width, kinect.height);
-  detector = new PeopleDetector(NUMBER_OF_BEATS);
 }
 
 //TODO delete
@@ -56,15 +79,47 @@ synchronized void randomBubbleGenerator(){
 }
 
 
+//------------------------------------------------------------
+//-------------------------TOTAL SETUP-----------------------
+//------------------------------------------------------------
+
 void setup() {
   size(640, 700);
+  initMode();
+  
   peopleToBeat = new int[NUMBER_OF_BEATS];
   setupMelodyVisualisation();
   setupBubbles();
-  if (isKinectDetected()){
-    
-  }
+  setupKinectDetection(); 
+  //searchKinect();
+  //if (hasKinect){
+  //  print("Kinect has been found. "); 
+  //  setupDetector();
+  //}else{
+  //  print("Kinect has not been found. ");
+  //  setupDefaultPeople();
+  //}
+}
 
+//------------------------------------------------------------
+//-------------------------MAIN FUNCTION-----------------------
+//------------------------------------------------------------
+
+void setDebugOn(){
+   bubbleManager.setDebugOn();
+   melodyVisualisation.setDebugOn(); 
+   if(hasKinect){
+     detector.setDebugOn();
+   }else{
+     println("No kinect so no detector initialized. To debug the detector, plug a kinect"); 
+   }
+}
+
+synchronized void displayModeSelection(){
+    fill(255, 2, 2);
+    text(errorText, 10, 363); 
+    fill(0); 
+    text ("Please choose a mode between \"debug\", \"kinect\" (to see what the kinect sees) and \"play\".\n"+selectedMode, 10, 333); 
 }
 
 synchronized void draw() {
@@ -73,18 +128,50 @@ synchronized void draw() {
   stroke(126);
   line(0, BUBBLE_PROJECTION_HEIGHT, 640, BUBBLE_PROJECTION_HEIGHT);
 
-  melodyVisualisation.draw();
+  switch (state) {
+  case 0:
+    displayModeSelection();
+    break;
+  
+  case 1:
+    if(selectedMode.equals("debug")){
+      setDebugOn(); 
+    }else if(selectedMode.equals("kinect")){
+      // Draw the raw image
+      image(kinect.getDepthImage(), 0, 0);
+    }
 
+    //if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
+    //   thread("randomBubbleGenerator");
+    //   bubbleManager.draw();
+    //}
+  
+    //bubbleManager.draw();
+  
+    if (hasKinect){
+      detector.draw(false);
+      if(frameCount % 480 == 0){
+        print("New frame to be used"); 
+        peopleToBeat = detector.getMainDepth(); // todo fix me :)
+        print("peopleToBeat = ");
+        detector.printDepth();
+      }
+    }
+    
+    melodyVisualisation.updateListOfPeople(peopleToBeat); 
+    melodyVisualisation.draw();
+  }
+}
 
-  //if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
-  //   thread("randomBubbleGenerator");
-  //   bubbleManager.draw();
-  //}
-
-  //bubbleManager.draw();
-
-  detector.draw(false);
-  if(frameCount % 480 == 0){
-    peopleToBeat = detector.getMainDepth(); // todo fix me :)
+void keyPressed() {
+  if (key==ENTER||key==RETURN) { 
+    if(isInListOfModes(selectedMode)){
+      state++;
+    }else{
+      errorText = "Selected mode does not exist: "+selectedMode + ".\nSelect \"debug\" OR \"kinect\" OR \"play\".\n NB: capitals letters are badly dealt with in Processing.";
+      resetSelectedMode(); 
+    }
+  } else{
+    selectedMode = selectedMode + key;
   }
 }

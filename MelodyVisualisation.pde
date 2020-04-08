@@ -15,6 +15,8 @@ class MelodyVisualisation {
   private float radius;
   private final int NUMBER_OF_BEATS = 8; 
   private final int MAX_DEPTH = 9; 
+  private boolean debugOn; 
+  private boolean printedDebugMode; 
   
   MelodyVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection){
       this.startMelodyArea = startMelodyArea; 
@@ -25,6 +27,19 @@ class MelodyVisualisation {
       listOfPeople = new int[8]; 
       widthOfPeopleSlot = widthProjection / NUMBER_OF_BEATS;
       radius = (heightMelodyArea / MAX_DEPTH );
+      printedDebugMode = false; 
+  }
+  
+  public void setDebugOn(){
+    if(printedDebugMode == false){
+      println("Melody Visualisation, debug mode on");
+      printedDebugMode = true; 
+    }
+    this.debugOn = true; 
+  }
+  
+  public void setDebugOff(){
+    this.debugOn = false;
   }
   
   public void updateListOfPeople(int[] listOfPeople){
@@ -44,10 +59,12 @@ class MelodyVisualisation {
   }
   
   private float getYPosition(int depth){
-    print("vertical slot = " + heightMelodyArea / MAX_DEPTH); 
-    print("\n heightMelodyArea = " + heightMelodyArea); 
-    print("\n startMelodyArea = " + startMelodyArea); 
-    print("\n returns => " + ((depth *  heightMelodyArea / MAX_DEPTH) + startMelodyArea )); 
+    if(debugOn){
+      print("vertical slot = " + heightMelodyArea / MAX_DEPTH); 
+      print("\n heightMelodyArea = " + heightMelodyArea); 
+      print("\n startMelodyArea = " + startMelodyArea); 
+      print("\n returns => " + ((depth *  heightMelodyArea / MAX_DEPTH) + startMelodyArea ));
+    }
     return (depth *  heightMelodyArea / MAX_DEPTH) + startMelodyArea ; 
   }
   
@@ -77,7 +94,7 @@ class MelodyVisualisation {
   public void draw(){  
     updateXPosition();
     drawPeopleSlot(); 
-    //drawLine(); 
+    drawLine(); 
     drawPeople();
   }
 

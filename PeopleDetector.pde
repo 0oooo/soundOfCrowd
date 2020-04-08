@@ -23,6 +23,9 @@ class PeopleDetector {
   private int[] rawDepth;              // depth captured by the kinect
   private int[] scaledDepthPerPixel;   // depth transformed following the threshold
   private int[] depthAsListOfBeats;    // depth transformed into a list of X beats   
+  
+  private boolean debugOn; 
+  private boolean printedDebugMode; 
 
   public PeopleDetector(int numberOfBeats) {
     numberOfPixels = kinect.width * kinect.height;
@@ -31,6 +34,21 @@ class PeopleDetector {
 
     this.numberOfBeats = numberOfBeats; 
     depthAsListOfBeats = new int[numberOfBeats];
+    
+    debugOn = false;
+    printedDebugMode = false; 
+  }
+  
+  public void setDebugOn(){
+    if(printedDebugMode == false){
+      print("People Detector, debug mode on");
+      printedDebugMode = true; 
+    }
+    this.debugOn = true; 
+  }
+  
+  public void setDebugOff(){
+    this.debugOn = false;
   }
 
   public int getMainDepthPerZone(int startColumnIndex, int endColumnIndex, int totalPixelsToExplore, int[][] snapOfDepthImage) {
@@ -55,7 +73,16 @@ class PeopleDetector {
     return meanOfDepth;   //todo replae the 1 by mean of depth
   }
 
-
+  //todo : add a "mirror" mode to chose if we want the original list or the reverse one? 
+  private void reverseList(){
+    int[] reverseList = new int[depthAsListOfBeats.length];
+    
+    for(int i = 0, j = depthAsListOfBeats.length -1; i < reverseList.length && j >= 0; i++, j--){
+      reverseList[i] = depthAsListOfBeats[j];
+    }
+    depthAsListOfBeats = reverseList; 
+  }
+  
   public int[] getMainDepth() {
 
     int[][] imageMatrix = make2dArrayDepth();
@@ -68,9 +95,10 @@ class PeopleDetector {
     for (int x = 0, i = 0; x < totalWidth && i < numberOfBeats; x += areaWidth, i++) {  
       depthAsListOfBeats[i] = getMainDepthPerZone(x, x + areaWidth, totalPixelToExplore, imageMatrix);
     }
-    
-    printDepth();
-    
+    if(debugOn){
+      printDepth();
+    }
+    //reverseList(); 
     return depthAsListOfBeats;
   }
 
