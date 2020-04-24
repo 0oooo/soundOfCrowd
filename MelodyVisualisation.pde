@@ -91,11 +91,13 @@ class MelodyVisualisation {
     }
   }
   
-  public void draw(){  
-    updateXPosition();
+  public void draw(){ 
+    
     drawPeopleSlot(); 
-    drawLine(); 
     drawPeople();
+    
+    updateXPosition();
+    drawLine(); 
   }
 
 }

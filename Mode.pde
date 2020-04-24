@@ -10,6 +10,7 @@ void initMode(){
   modes.add("debug"); 
   modes.add("kinect"); 
   modes.add("play"); 
+  modes.add("bubble"); 
 }
 
 void resetSelectedMode(){

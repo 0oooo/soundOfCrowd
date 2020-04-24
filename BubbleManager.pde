@@ -6,28 +6,28 @@
 
 class BubbleManager{
   
-  private ArrayList<Bubble> bubbles; 
+  //private ArrayList<Bubble> bubbles; 
+  private HashMap<Integer, Bubble> bubblesMap;
   private final int MAX_NUMBER_OF_BUBBLES = 3;
   private int numberOfBubbles; 
   private int maxHeightForBubbles;
   private boolean debugOn; 
   private boolean printedDebugMode; 
+  private int firstBubbleInList; 
   
   public BubbleManager(int bottomBubbleProjection){
     numberOfBubbles = 0; 
     maxHeightForBubbles = bottomBubbleProjection;
-    bubbles = new ArrayList<Bubble>(); 
+    //bubbles = new ArrayList<Bubble>(); 
+    bubblesMap = new HashMap<Integer, Bubble>(); 
     debugOn = false; 
     printedDebugMode = false; 
+    firstBubbleInList = 0; 
   }
   
   private void removeFirstBubble(){
-    ArrayList<Bubble> newBubbles =  new ArrayList<Bubble>(); 
-    for (int i = 1; i < numberOfBubbles - 1; i++){ //<>//
-      newBubbles.add(bubbles.get(i)); //<>//
-    }
-    bubbles = newBubbles; 
-    numberOfBubbles = 0; 
+    bubblesMap.remove(firstBubbleInList); 
+    firstBubbleInList++;  //<>// //<>//
   }
   
  public void setDebugOn(){
@@ -43,33 +43,32 @@ class BubbleManager{
   }
   
   public void addBubble(Bubble bubble){
-    //bubbles.add(bubble); 
-    //numberOfBubbles++;
-    //if(bubbles.size() == MAX_NUMBER_OF_BUBBLES){
-    //  removeFirstBubble(); 
-    //}
-    
-    if(debugOn){
-      print("Number of bubbles = " + numberOfBubbles); 
-      print("MAX_NUMBER_OF_BUBBLES = " + MAX_NUMBER_OF_BUBBLES);
-    }
     
     if(numberOfBubbles < MAX_NUMBER_OF_BUBBLES){
-      bubbles.add(bubble); 
+      //bubbles.add(bubble); 
+      bubblesMap.put(bubble.getId(), bubble); 
       numberOfBubbles++; 
     } else {
       removeFirstBubble(); 
+      numberOfBubbles--; 
+    }
+    
+   if(debugOn){
+      print("Number of bubbles = " + numberOfBubbles); 
+      print("MAX_NUMBER_OF_BUBBLES = " + MAX_NUMBER_OF_BUBBLES);
     }
   }
   
   private void checkCollision(Bubble bubble){
-    for(Bubble otherBubble : bubbles){
+   for(Map.Entry bubbleInMap : bubblesMap.entrySet()){
+      Bubble otherBubble = (Bubble) bubbleInMap.getValue(); 
       bubble.checkCollision(otherBubble); 
     }
   }
   
   public void draw(){
-    for(Bubble bubble : bubbles){ //<>//
+    for(Map.Entry bubbleInMap : bubblesMap.entrySet()){ //<>//
+      Bubble bubble = (Bubble) bubbleInMap.getValue(); 
       bubble.update();  //<>//
       bubble.display();  //<>// //<>//
       bubble.checkBoundaryCollision(maxHeightForBubbles); 

@@ -91,14 +91,6 @@ void setup() {
   setupMelodyVisualisation();
   setupBubbles();
   setupKinectDetection(); 
-  //searchKinect();
-  //if (hasKinect){
-  //  print("Kinect has been found. "); 
-  //  setupDetector();
-  //}else{
-  //  print("Kinect has not been found. ");
-  //  setupDefaultPeople();
-  //}
 }
 
 //------------------------------------------------------------
@@ -119,7 +111,19 @@ synchronized void displayModeSelection(){
     fill(255, 2, 2);
     text(errorText, 10, 363); 
     fill(0); 
-    text ("Please choose a mode between \"debug\", \"kinect\" (to see what the kinect sees) and \"play\".\n"+selectedMode, 10, 333); 
+    text ("Please choose a mode between \"debug\", \"kinect\" (to see what the kinect sees),  \"play\" and \"bubble\".\n"+selectedMode, 10, 333); 
+}
+
+synchronized void deleteLastLetter(){
+      if(selectedMode.length() <= 1){
+        selectedMode = ""; 
+      }else{     
+        String newWord = selectedMode.substring(0, selectedMode.length() - 1);
+        selectedMode = ""; 
+        selectedMode = newWord;
+        //println("length = ", selectedMode.length() );
+      }
+      //println(selectedMode);
 }
 
 synchronized void draw() {
@@ -134,44 +138,60 @@ synchronized void draw() {
     break;
   
   case 1:
-    if(selectedMode.equals("debug")){
-      setDebugOn(); 
-    }else if(selectedMode.equals("kinect")){
-      // Draw the raw image
-      image(kinect.getDepthImage(), 0, 0);
-    }
-
-    //if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
-    //   thread("randomBubbleGenerator");
-    //   bubbleManager.draw();
-    //}
-  
-    //bubbleManager.draw();
-  
-    if (hasKinect){
-      detector.draw(false);
-      if(frameCount % 480 == 0){
-        print("New frame to be used"); 
-        peopleToBeat = detector.getMainDepth(); // todo fix me :)
-        print("peopleToBeat = ");
-        detector.printDepth();
+   if (selectedMode.equals("bubble")){
+      bubbleManager.setDebugOn();
+      if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
+        thread("randomBubbleGenerator");
+         //bubbleManager.draw();
       }
-    }
+      bubbleManager.draw();
+   }
+   else {  
+     if(selectedMode.equals("debug")){
+       setDebugOn(); 
+     }else if(selectedMode.equals("kinect")){
+       // Draw the raw image
+       image(kinect.getDepthImage(), 0, 0);
+     }
+      
+     if (hasKinect){
+       detector.draw(false);
+       if(frameCount % 480 == 0){
+         print("New frame to be used"); 
+         peopleToBeat = detector.getMainDepth(); // todo fix me :)
+         print("peopleToBeat = ");
+         detector.printDepth();
+       }
+     }
     
-    melodyVisualisation.updateListOfPeople(peopleToBeat); 
-    melodyVisualisation.draw();
+     melodyVisualisation.updateListOfPeople(peopleToBeat); 
+     melodyVisualisation.draw();
+     
+     
+     if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
+        thread("randomBubbleGenerator");
+         //bubbleManager.draw();
+      }
+      bubbleManager.draw();
+   }  
   }
+ 
 }
 
 void keyPressed() {
-  if (key==ENTER||key==RETURN) { 
-    if(isInListOfModes(selectedMode)){
-      state++;
-    }else{
-      errorText = "Selected mode does not exist: "+selectedMode + ".\nSelect \"debug\" OR \"kinect\" OR \"play\".\n NB: capitals letters are badly dealt with in Processing.";
-      resetSelectedMode(); 
+  if (key != CODED) {
+    if(key==BACKSPACE){
+       deleteLastLetter();
     }
-  } else{
-    selectedMode = selectedMode + key;
+    if (key==ENTER||key==RETURN) { 
+      if(isInListOfModes(selectedMode)){
+        state++;
+      }else{
+        errorText = "Selected mode does not exist: "+selectedMode + ".\nSelect \"debug\" OR \"kinect\" OR \"play\" OR \"BUBBLE\".\n NB: capitals letters are badly dealt with in Processing.";
+        resetSelectedMode(); 
+      }
+    } else{
+      selectedMode = selectedMode + key;
+    }
   }
 }
