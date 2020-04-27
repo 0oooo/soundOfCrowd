@@ -49,7 +49,7 @@ class MelodyVisualisation {
   }
   
   private void updateXPosition(){
-    if(xPosition == widthProjection){ 
+    if(xPosition >= widthProjection){ 
       xPosition = 0; 
     } else{
       xPosition = xPosition + speed;
@@ -70,36 +70,69 @@ class MelodyVisualisation {
     return (depth *  heightMelodyArea / MAX_DEPTH) + startMelodyArea ; 
   }
   
-  private void drawPeople(){
+  //private void drawPeople(){
+  //  for(int i = 0; i < listOfPeople.length; i++){ 
+  //    if(listOfPeople[i] > 0){
+  //      noStroke(); 
+  //      fill(51, 128, 204);
+  //      ellipse(getXPosition(i), getYPosition(listOfPeople[i]), radius*2, radius*2);
+  //    }
+  //  }
+  //}
+  
+  //private void drawLine(){
+  //  strokeWeight(4); 
+  //  stroke(245, 229, 83);
+  //  line(xPosition, startMelodyArea, xPosition, bottomOfProjection);   
+  //}
+  
+  //private void drawPeopleSlot(){
+  //  for(int i = 0; i < widthProjection; i += widthOfPeopleSlot){
+  //    fill(10 + (i/ 10));
+  //    rect(i, startMelodyArea, widthOfPeopleSlot, heightMelodyArea);
+  //  }
+  //}
+  
+  //public void draw(){ 
+    
+  //  drawPeopleSlot(); 
+  //  drawPeople();
+    
+  //  updateXPosition();
+  //  drawLine(); 
+  //}
+  
+  
+    private void drawPeople(PApplet app){
     for(int i = 0; i < listOfPeople.length; i++){ 
       if(listOfPeople[i] > 0){
-        noStroke(); 
-        fill(51, 128, 204);
-        ellipse(getXPosition(i), getYPosition(listOfPeople[i]), radius*2, radius*2);
+        app.noStroke(); 
+        app.fill(51, 128, 204);
+        app.ellipse(getXPosition(i), getYPosition(listOfPeople[i]), radius*2, radius*2);
       }
     }
   }
   
-  private void drawLine(){
-    strokeWeight(4); 
-    stroke(245, 229, 83);
-    line(xPosition, startMelodyArea, xPosition, bottomOfProjection);   
-  }
-  
-  private void drawPeopleSlot(){
+  private void drawPeopleSlot(PApplet app){
     for(int i = 0; i < widthProjection; i += widthOfPeopleSlot){
-      fill(10 + (i/ 10));
-      rect(i, startMelodyArea, widthOfPeopleSlot, heightMelodyArea);
+      app.fill(10 + (i/ 10));
+      app.rect(i, startMelodyArea, widthOfPeopleSlot, heightMelodyArea);
     }
   }
   
-  public void draw(){ 
+  private void drawLine(PApplet app){
+    app.strokeWeight(4); 
+    app.stroke(245, 229, 83);
+    app.line(xPosition, startMelodyArea, xPosition, bottomOfProjection);   
+  }
+  
+  public void draw(PApplet app){ 
     
-    drawPeopleSlot(); 
-    drawPeople();
+    drawPeopleSlot(app); 
+    drawPeople(app);
     
     updateXPosition();
-    drawLine(); 
+    drawLine(app); 
   }
 
 }
