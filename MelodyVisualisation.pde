@@ -8,7 +8,7 @@ class MelodyVisualisation {
   private int startMelodyArea; 
   private int bottomOfProjection;
   private int heightMelodyArea; 
-  private int xPosition; 
+  private float xPosition; 
   private int widthProjection; 
   private int[] listOfPeople; 
   private float widthOfPeopleSlot; 
@@ -16,9 +16,10 @@ class MelodyVisualisation {
   private final int NUMBER_OF_BEATS = 8; 
   private final int MAX_DEPTH = 9; 
   private boolean debugOn; 
-  private boolean printedDebugMode; 
+  private boolean printedDebugMode;
+  private float speed; 
   
-  MelodyVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection){
+  MelodyVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection, float speed){
       this.startMelodyArea = startMelodyArea; 
       this.bottomOfProjection = bottomOfProjection;
       heightMelodyArea = bottomOfProjection - startMelodyArea;
@@ -28,6 +29,7 @@ class MelodyVisualisation {
       widthOfPeopleSlot = widthProjection / NUMBER_OF_BEATS;
       radius = (heightMelodyArea / MAX_DEPTH );
       printedDebugMode = false; 
+      this.speed = speed; 
   }
   
   public void setDebugOn(){
@@ -47,10 +49,10 @@ class MelodyVisualisation {
   }
   
   private void updateXPosition(){
-    if(xPosition == widthProjection){
+    if(xPosition == widthProjection){ 
       xPosition = 0; 
     } else{
-      xPosition++;
+      xPosition = xPosition + speed;
     }
   }
   

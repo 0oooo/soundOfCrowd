@@ -8,7 +8,7 @@ class BubbleManager{
   
   //private ArrayList<Bubble> bubbles; 
   private HashMap<Integer, Bubble> bubblesMap;
-  private final int MAX_NUMBER_OF_BUBBLES = 3;
+  private final int MAX_NUMBER_OF_BUBBLES = 10;
   private int numberOfBubbles; 
   private int maxHeightForBubbles;
   private boolean debugOn; 
@@ -70,7 +70,7 @@ class BubbleManager{
     for(Map.Entry bubbleInMap : bubblesMap.entrySet()){ //<>//
       Bubble bubble = (Bubble) bubbleInMap.getValue(); 
       bubble.update();  //<>//
-      bubble.display();  //<>// //<>//
+      bubble.display();  //<>//
       bubble.checkBoundaryCollision(maxHeightForBubbles); 
       checkCollision(bubble); 
     }

@@ -11,7 +11,8 @@ int BUBBLE_PROJECTION_HEIGHT = round(PROJECTION_HEIGHT * PERCENTAGE_BUBBLE_PROJE
 int GREY_AREA = 10;
 int MELODY_VISUALISATION_HEIHGT = PROJECTION_HEIGHT - (GREY_AREA + BUBBLE_PROJECTION_HEIGHT);
 int NUMBER_OF_BEATS = 8;
-int DETECTION_FREQUENCY_THRESHOLD = 20;
+int DETECTION_FREQUENCY_THRESHOLD = 3;
+float MUSIC_SPEED = 1.50; // todo: find a formula to calculate that (something like width of the screen divided by the time I want the line to move through it)
 
 MelodyVisualisation melodyVisualisation;
 BubbleManager bubbleManager;
@@ -61,6 +62,7 @@ void setupDefaultPeople(){
   println("Setting up the default array of people."); 
   int[] defaultPeople = {0, 4, 5, 2, 7, 1, 8, 2};
   peopleToBeat = defaultPeople;
+  lastPeopleDetected = peopleToBeat; 
 }
 
 synchronized void detectPeople(){
@@ -85,7 +87,8 @@ void setupMelodyVisualisation(){
   int startMelodyVisualisation = PROJECTION_HEIGHT - MELODY_VISUALISATION_HEIHGT - GREY_AREA;
   int endMelodyVisualisation = TOTAL_HEIGHT;
   int widthMelodyVisualisation = TOTAL_WIDTH;
-  melodyVisualisation = new MelodyVisualisation(startMelodyVisualisation, endMelodyVisualisation, widthMelodyVisualisation);
+  float speed = MUSIC_SPEED; 
+  melodyVisualisation = new MelodyVisualisation(startMelodyVisualisation, endMelodyVisualisation, widthMelodyVisualisation, speed);
   melodyVisualisation.updateListOfPeople(peopleToBeat);
 }
 
@@ -106,6 +109,7 @@ void setupBubbles(){
 int id = 0;
 
 synchronized void randomBubbleGenerator(){
+  print(" Adding a new bubble "); 
   int first = (int)(Math.random() * 120 + 100); // 120 = max and 100 = min
   int second = (int)(Math.random() * 400 + 100);
   int third = (int)(Math.random() * 30 + 20);
@@ -115,7 +119,7 @@ synchronized void randomBubbleGenerator(){
 
 synchronized void peopleDectectionFrequencyGenerator(){
   for(int i = 0; i < peopleToBeat.length; i++){
-    if(peopleToBeat[i] == lastPeopleDetected[i]){
+    if(peopleToBeat[i] == lastPeopleDetected[i] && peopleToBeat[i] > 0){
       peopleDetectionFrequency[i]++; 
     }else{
       peopleDetectionFrequency[i] = 0;
@@ -124,16 +128,23 @@ synchronized void peopleDectectionFrequencyGenerator(){
 }
 
 synchronized void bubbleGenerator(){
+  print("DETECTION_FREQUENCY_THRESHOLD = ", DETECTION_FREQUENCY_THRESHOLD); 
+  print("Detected: "); 
     for(int i = 0; i < peopleDetectionFrequency.length; i++){
-      if(peopleDetectionFrequency[i] >= DETECTION_FREQUENCY_THRESHOLD){
-          randomBubbleGenerator();
+       print(peopleDetectionFrequency[i] + " "); 
+      if(peopleDetectionFrequency[i] >= DETECTION_FREQUENCY_THRESHOLD){ 
+          randomBubbleGenerator(); 
+          peopleDetectionFrequency[i] = 0; 
       }
     }
+    print("\n");
 }
 
 synchronized void makeBubble(){
-   peopleDectectionFrequencyGenerator();
-   bubbleGenerator();
+   if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
+      thread("peopleDectectionFrequencyGenerator");
+      thread("bubbleGenerator"); 
+   }
    bubbleManager.draw();
 }
 
@@ -193,17 +204,17 @@ void setup() {
   setupKinectDetection(); 
 }
 
-
-//------------------------------------------------------------
-//-------------------------MAIN FUNCTIONS---------------------
-//------------------------------------------------------------
-
 synchronized void setupDrawing(){
   background(255);
   strokeWeight(1);
   stroke(126);
   line(0, BUBBLE_PROJECTION_HEIGHT, 640, BUBBLE_PROJECTION_HEIGHT);
 }
+
+
+//------------------------------------------------------------
+//-------------------------MAIN FUNCTIONS---------------------
+//------------------------------------------------------------
 
 synchronized void draw() {
   setupDrawing();
@@ -230,18 +241,18 @@ synchronized void draw() {
       
        // Create the visualisation of the detected people
        makeMelody(); 
-       
-       
-       // Create the visualisation of the full participation
-       //if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
-       //   thread("randomBubbleGenerator");
-       //}
-        makeBubble(); 
+              
+       // Create the visualisation of the full participation       
+       makeBubble(); 
      
      // If the mode selected was none of the above and was not catch earlier = unexpected error. 
      }else{
        sendErrorMessage();
      }
+     break; 
+     
+   default: 
+     displayModeSelection();
    }  
 }
 
