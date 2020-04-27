@@ -52,7 +52,6 @@ class PeopleDetector {
   }
 
   public int getMainDepthPerZone(int startColumnIndex, int endColumnIndex, int totalPixelsToExplore, int[][] snapOfDepthImage) {
-
     int maxNumberOfPixelsOutZone = (int) Math.round(totalPixelsToExplore * THRESHOLD_PIXELS_NOT_IN_DETECTED_ZONE);
     int numberOfPixelOutZone = 0; 
     int pixelsWithADepth = 0; 
@@ -84,7 +83,6 @@ class PeopleDetector {
   }
   
   public int[] getMainDepth() {
-
     int[][] imageMatrix = make2dArrayDepth();
 
     int totalWidth = kinect.width; 
@@ -98,7 +96,7 @@ class PeopleDetector {
     if(debugOn){
       printDepth();
     }
-    //reverseList(); 
+    
     return depthAsListOfBeats;
   }
 
