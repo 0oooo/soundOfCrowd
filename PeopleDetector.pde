@@ -5,12 +5,6 @@
  * Resolution kinect = 640 x 480 
  */
 
-
-Kinect kinect;
-
-// Depth image TODO DELETE
-PImage depthImg;
-
 class PeopleDetector {
 
   private final int THRESHOLD_DEPTH_DETECTION_MAX = 1000;

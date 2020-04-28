@@ -9,6 +9,7 @@ import g4p_controls.*;
 
 void init() {
   initMode();
+  startTime = second(); 
   peopleToBeat = new int[NUMBER_OF_BEATS];
   lastPeopleDetected = new int[NUMBER_OF_BEATS];
   peopleDetectionFrequency = new int[NUMBER_OF_BEATS];
@@ -17,28 +18,13 @@ void init() {
   setupKinectDetection(); 
 }
 
-void secondWinSetup(){
-  musicWindow = GWindow.getWindow(this, "Music Visualisation", 100, 50, 640, 210, JAVA2D);
-  musicWindow.addDrawHandler(this, "makeMusicWindow");
-}
-
-void makeMusicWindow(PApplet app, GWinData windata){
-  app.background(255);
-  app.strokeWeight(1);
-  app.stroke(126);
-  app.fill(0); 
-  if(startVisualisation){
-    makeMelody(app);
-  }
-}
-
 void setup() {
-  size(640, 490);
+  size(640, 480);
   init(); 
   secondWinSetup();
 }
 
-synchronized void setupDrawingAreas(){
+synchronized void setupMainDrawing(){
   background(255);
   strokeWeight(1);
   stroke(126);
@@ -46,15 +32,19 @@ synchronized void setupDrawingAreas(){
 
 
 //------------------------------------------------------------
-//-------------------------MAIN FUNCTIONS---------------------
+//-------------------------MAIN WIDNDOW---------------------
 //------------------------------------------------------------
 
 synchronized void draw() {
-  setupDrawingAreas();
+  setupMainDrawing();
 
   switch (state) {
   case 0:
     displayModeSelection();
+    
+    //todo delete
+    
+    
     break;
   
   case 1:
@@ -72,19 +62,16 @@ synchronized void draw() {
        // Detect the people through the kinect
        detectPeople(); 
        
+       // Start the visualisation in the other window
        startVisualisation = true; 
               
        // Create the visualisation of the full participation       
-       makeBubble(); 
-     
-     // If the mode selected was none of the above and was not catch earlier = unexpected error. 
-     }else{
-       sendErrorMessage();
+       runBubbleFactory(); 
      }
      break; 
      
    default: 
-     displayModeSelection();
+     sendErrorMessage();
    }  
 }
 
@@ -103,5 +90,25 @@ void keyPressed() {
     } else{
       selectedMode = selectedMode + key;
     }
+  }
+}
+
+//------------------------------------------------------------
+//-------------------------SECOND WIDNDOW---------------------
+//------------------------------------------------------------
+
+
+void secondWinSetup(){
+  musicWindow = GWindow.getWindow(this, "Music Visualisation", 320, 650, 640, 200, JAVA2D);
+  musicWindow.addDrawHandler(this, "makeMusicWindow");
+}
+
+void makeMusicWindow(PApplet app, GWinData windata){
+  app.background(255);
+  app.strokeWeight(1);
+  app.stroke(126);
+  app.fill(0); 
+  if(startVisualisation){
+    makeMelody(app);
   }
 }

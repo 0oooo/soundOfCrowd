@@ -54,7 +54,7 @@ synchronized void detectPeople(){
 }
 
 //------------------------------------------------------------
-//-------------------PEOPLE PLAYER SETUP----------------------
+//-------------------PEOPLE PLAYER---------------------------
 //------------------------------------------------------------
 
 void setupMelodyVisualisation(){
@@ -70,7 +70,7 @@ void makeMelody(PApplet app){
 }
 
 //------------------------------------------------------------
-//-------------------------BUBBLES SETUP-----------------------
+//-------------------------BUBBLES----------------------------
 //------------------------------------------------------------
 
 void setupBubbles(){
@@ -78,46 +78,11 @@ void setupBubbles(){
 }
 
 //TODO delete
-int id = 0;
+int bubbleId = 0;
 
-synchronized void randomBubbleGenerator(){
-  print(" Adding a new bubble "); 
-  int first = (int)(Math.random() * 120 + 100); // 120 = max and 100 = min
-  int second = (int)(Math.random() * 400 + 100);
-  int third = (int)(Math.random() * 30 + 20);
-  bubbleManager.addBubble(new Bubble(first, second, third, id));
-  id++;
-}
-
-synchronized void peopleDectectionFrequencyGenerator(){
-  for(int i = 0; i < peopleToBeat.length; i++){
-    if(peopleToBeat[i] == lastPeopleDetected[i] && peopleToBeat[i] > 0){
-      peopleDetectionFrequency[i]++; 
-    }else{
-      peopleDetectionFrequency[i] = 0;
-    }
-  }
-}
-
-synchronized void bubbleGenerator(){
-  print("DETECTION_FREQUENCY_THRESHOLD = ", DETECTION_FREQUENCY_THRESHOLD); 
-  print("Detected: "); 
-    for(int i = 0; i < peopleDetectionFrequency.length; i++){
-       print(peopleDetectionFrequency[i] + " "); 
-      if(peopleDetectionFrequency[i] >= DETECTION_FREQUENCY_THRESHOLD){ 
-          randomBubbleGenerator(); 
-          peopleDetectionFrequency[i] = 0; 
-      }
-    }
-    print("\n");
-}
-
-synchronized void makeBubble(){
-   if (frameCount % 480 == 0) { //NB kinect = 60? frames per seconds
-      thread("peopleDectectionFrequencyGenerator");
-      thread("bubbleGenerator"); 
-   }
-   bubbleManager.draw();
+void runBubbleFactory(){
+  bubbleManager.run(); 
+  bubbleManager.draw();
 }
 
 //------------------------------------------------------------
