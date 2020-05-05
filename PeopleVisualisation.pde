@@ -21,6 +21,7 @@ class PeopleVisualisation{
   private boolean debugOn; 
   private boolean printedDebugMode;
   private float speed; 
+  private MelodyMaster melodyMaster; 
   
   PeopleVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection, float speed){
       this.startMelodyArea = startMelodyArea; 
@@ -33,6 +34,7 @@ class PeopleVisualisation{
       radius = (heightMelodyArea / MAX_DEPTH );
       printedDebugMode = false; 
       this.speed = speed; 
+      melodyMaster = new MelodyMaster(); 
       
       leftSideOfPeople = new int[NUMBER_OF_BEATS];       
       hasSomeoneIn = new boolean[NUMBER_OF_BEATS];
@@ -101,11 +103,6 @@ class PeopleVisualisation{
     app.strokeWeight(4); 
     app.stroke(245, 229, 83);
     app.line(xPosition, startMelodyArea, xPosition, bottomOfProjection);   
-    
-    //TODO come back here. Somehow we want to check if the line is touching one of the left point (after transforming the list of left points as a set?)
-    // if it does, we want to start to play a note
-    // How do we know what note? We can calculate from the left point the index in the list which correspond to the index in the list of people
-    // then we retrive that person depth and we use that value to decide what note.    
   }
   
   public int isTouchingPeople(){ 
@@ -140,7 +137,9 @@ class PeopleVisualisation{
     drawPeople(app);
     
     updateXPosition();
-    isTouchingPeople();
+    if(isTouchingPeople() > -1){
+      melodyMaster.update(isTouchingPeople()); //todo make that nicer
+    }
     drawLine(app); 
   }
   

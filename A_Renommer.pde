@@ -70,11 +70,6 @@ void makeMelody(PApplet app){
    peopleVisualisation.draw(app);
 }
 
-void setupMelodyPlayer(){
-  minim = new Minim(this);
-  melodyPlayer = new MelodyPlayer(); 
-}
-
 //------------------------------------------------------------
 //-------------------------BUBBLES----------------------------
 //------------------------------------------------------------

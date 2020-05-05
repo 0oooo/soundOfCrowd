@@ -26,7 +26,6 @@ void initVariables() {
 
 void setupTools(){
   setupPeopleVisualisation();
-  setupMelodyPlayer(); 
   setupBubbles();
   setupKinectDetection(); 
   secondWinSetup();
@@ -37,6 +36,7 @@ void setup() {
   initMode();
   initVariables(); 
   setupTools(); 
+   minim = new Minim(this); 
 }
 
 synchronized void setupMainDrawing(){

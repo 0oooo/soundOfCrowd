@@ -63,7 +63,7 @@ class PeopleDetector {
       }
     }
     int meanOfDepth = Math.round(totalDepthOfPixelWithADepth / pixelsWithADepth); 
-    return meanOfDepth;   //todo replae the 1 by mean of depth
+    return meanOfDepth;  
   }
 
   //todo : add a "mirror" mode to chose if we want the original list or the reverse one? 
