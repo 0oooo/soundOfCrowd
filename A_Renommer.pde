@@ -24,7 +24,8 @@ void showKinectVideo(){
    if(hasKinect){
      image(kinect.getDepthImage(), 0, 0);
    }else{
-     print("No kinect detected, kinect mode invalid"); 
+     fill(255, 2, 2);
+     text("No kinect detected, kinect mode invalid", 10, (HEIGHT_START_WINDOW / 3));
    }
 }
 
@@ -42,7 +43,7 @@ void setupDefaultPeople(){
 synchronized void detectPeople(){
    if (hasKinect){
      detector.draw(false);
-     if(frameCount % 480 == 0){
+     if(frameCount % FRAME_COUNT_FOR_8_SECONDS == 0){
        print("New frame to be used"); 
         // keep track of the last people detected for the bubble generator
        lastPeopleDetected = peopleToBeat; 
@@ -57,16 +58,21 @@ synchronized void detectPeople(){
 //-------------------PEOPLE PLAYER---------------------------
 //------------------------------------------------------------
 
-void setupMelodyVisualisation(){
-  int widthMelodyVisualisation = TOTAL_WIDTH;
+void setupPeopleVisualisation(){
+  int widthPeopleVisualisation = TOTAL_WIDTH;
   float speed = MUSIC_SPEED; 
-  melodyVisualisation = new MelodyVisualisation(0, MELODY_VISUALISATION_HEIHGT, widthMelodyVisualisation, speed);
-  melodyVisualisation.updateListOfPeople(peopleToBeat);
+  peopleVisualisation = new PeopleVisualisation(0, MELODY_VISUALISATION_HEIHGT, widthPeopleVisualisation, speed);
+  peopleVisualisation.updateListOfPeople(peopleToBeat);
 }
 
 void makeMelody(PApplet app){
-   melodyVisualisation.updateListOfPeople(peopleToBeat); 
-   melodyVisualisation.draw(app);
+   peopleVisualisation.updateListOfPeople(peopleToBeat); 
+   peopleVisualisation.draw(app);
+}
+
+void setupMelodyPlayer(){
+  minim = new Minim(this);
+  melodyPlayer = new MelodyPlayer(); 
 }
 
 //------------------------------------------------------------
@@ -77,51 +83,7 @@ void setupBubbles(){
   bubbleManager = new BubbleManager(HEIGHT_BUBBLE_WINDOW);
 }
 
-//TODO delete
-int bubbleId = 0;
-
 void runBubbleFactory(){
   bubbleManager.run(); 
   bubbleManager.draw();
-}
-
-//------------------------------------------------------------
-//----------------------MESSAGE FUNCTIONS---------------------
-//------------------------------------------------------------
-
-synchronized void displayModeSelection(){
-    fill(255, 2, 2);
-    
-    text(errorText, 10, (HEIGHT_START_WINDOW / 2) + 40); 
-    fill(0); 
-    text ("Please choose a mode between \"debug\", \"kinect\" (to see what the kinect sees), and  \"play\".\n"+selectedMode, 10, HEIGHT_START_WINDOW / 2); 
-}
-
-
-synchronized void sendErrorMessage(){
-    println("Unexpected error: the mode selected is unknown."); 
-    fill(255, 2, 2);
-    text ("An unexpected error happened. An unknown mode has been selected. Please restart the program. ", 10, HEIGHT_START_WINDOW / 2); 
-}
-
-synchronized void deleteLastLetter(){
-      if(selectedMode.length() <= 1){
-        selectedMode = ""; 
-      }else{     
-        String newWord = selectedMode.substring(0, selectedMode.length() - 1);
-        selectedMode = ""; 
-        selectedMode = newWord;
-        //println("length = ", selectedMode.length() );
-      }
-      //println(selectedMode);
-}
-
-void setDebugOn(){
-   bubbleManager.setDebugOn();
-   melodyVisualisation.setDebugOn(); 
-   if(hasKinect){
-     detector.setDebugOn();
-   }else{
-     println("No kinect so no detector initialized. To debug the detector, plug a kinect"); 
-   }
 }

@@ -3,7 +3,7 @@
 * Takes the list of detected people and put them on the screen
 * Depth changes the y-position and x is just their x-position
 */
-class MelodyVisualisation {
+class PeopleVisualisation{
   
   private int startMelodyArea; 
   private int bottomOfProjection;
@@ -11,6 +11,9 @@ class MelodyVisualisation {
   private float xPosition; 
   private int widthProjection; 
   private int[] listOfPeople; 
+  //private float[] peopleSlotsLeftestPoint; 
+  private int[] leftSideOfPeople; 
+  private boolean[] hasSomeoneIn; 
   private float widthOfPeopleSlot; 
   private float radius;
   private final int NUMBER_OF_BEATS = 8; 
@@ -19,7 +22,7 @@ class MelodyVisualisation {
   private boolean printedDebugMode;
   private float speed; 
   
-  MelodyVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection, float speed){
+  PeopleVisualisation(int startMelodyArea, int bottomOfProjection, int widthProjection, float speed){
       this.startMelodyArea = startMelodyArea; 
       this.bottomOfProjection = bottomOfProjection;
       heightMelodyArea = bottomOfProjection - startMelodyArea;
@@ -30,14 +33,19 @@ class MelodyVisualisation {
       radius = (heightMelodyArea / MAX_DEPTH );
       printedDebugMode = false; 
       this.speed = speed; 
+      
+      leftSideOfPeople = new int[NUMBER_OF_BEATS];       
+      hasSomeoneIn = new boolean[NUMBER_OF_BEATS];
+      fillListsOfSide();
   }
   
-  public void setDebugOn(){
-    if(printedDebugMode == false){
-      println("Melody Visualisation, debug mode on");
-      printedDebugMode = true; 
+  private void fillListsOfSide(){
+    for (int i = 0; i < leftSideOfPeople.length; i++){
+      float totalBlankSpace = widthOfPeopleSlot - (2 * radius);
+      float sideBlankSpace = totalBlankSpace / 2; 
+      leftSideOfPeople[i] =  round(sideBlankSpace + i * widthOfPeopleSlot);
+      hasSomeoneIn[i] = false; 
     }
-    this.debugOn = true; 
   }
   
   public void setDebugOff(){
@@ -76,6 +84,8 @@ class MelodyVisualisation {
         app.noStroke(); 
         app.fill(51, 128, 204);
         app.ellipse(getXPosition(i), getYPosition(listOfPeople[i]), radius*2, radius*2);
+        
+        hasSomeoneIn[i] = true; 
       }
     }
   }
@@ -91,7 +101,34 @@ class MelodyVisualisation {
     app.strokeWeight(4); 
     app.stroke(245, 229, 83);
     app.line(xPosition, startMelodyArea, xPosition, bottomOfProjection);   
+    
+    //TODO come back here. Somehow we want to check if the line is touching one of the left point (after transforming the list of left points as a set?)
+    // if it does, we want to start to play a note
+    // How do we know what note? We can calculate from the left point the index in the list which correspond to the index in the list of people
+    // then we retrive that person depth and we use that value to decide what note.    
   }
+  
+  public int isTouchingPeople(){ 
+    int slotIndex = floor(xPosition / widthOfPeopleSlot); 
+    if(slotIndex < NUMBER_OF_BEATS){
+      if(hasSomeoneIn[slotIndex]){
+        if(debugOn)
+          print("People detected in slot " + slotIndex + " with xPosition = " + xPosition + "\n"); 
+        int xpos = round(xPosition);
+        if(xpos == leftSideOfPeople[slotIndex]){
+          if(debugOn)
+            print("WE'RE TOUCHING CAPTAIN\n");
+          return slotIndex;  
+        }
+      }else{
+        if(debugOn)
+          print("NO ONE IN SLOT " + slotIndex + " with xPosition = " + xPosition + "\n"); 
+      }
+    }
+    return -1; 
+  }
+  
+  
   
   public boolean isAtStartPoint(){
     return (xPosition <= 1);
@@ -103,7 +140,35 @@ class MelodyVisualisation {
     drawPeople(app);
     
     updateXPosition();
+    isTouchingPeople();
     drawLine(app); 
+  }
+  
+  
+  //------------------------------------------------------------
+  //----------------------DEBUG FUNCTIONS---------------------
+  //------------------------------------------------------------
+  
+    public void setDebugOn(){
+    if(printedDebugMode == false){
+      println("Melody Visualisation, debug mode on");
+      printedDebugMode = true; 
+    }
+    this.debugOn = true; 
+  }
+  
+  private void printLeftSideOfPeople(){
+    for(float people : leftSideOfPeople){
+      print(people + " ");
+    }
+    print("\n"); 
+  }
+  
+    private void printLeftOfBool(){
+    for(boolean someoneIn : hasSomeoneIn){
+      print(someoneIn + " ");
+    }
+    print("\n"); 
   }
 
 }

@@ -19,7 +19,6 @@ class BubbleManager extends Thread{
   public BubbleManager(int bottomBubbleProjection){
     numberOfBubbles = 0; 
     maxHeightForBubbles = bottomBubbleProjection;
-    //bubbles = new ArrayList<Bubble>(); 
     bubblesMap = new HashMap<Integer, Bubble>(); 
     debugOn = false; 
     printedDebugMode = false; 
