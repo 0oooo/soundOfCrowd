@@ -8,7 +8,7 @@
 class SoundPlayer{
   
   final private String[] NOTE_SCALE = {"C","C#","D","D#","E","F","F#","G","G#", "A","A#","B"};
-  final private String[] C_MINOR_NATURAL_SCALE = {"C3", "D"};//, "D#", "F", "G", "G#", "B", "C4"};
+  final private String[] C_MINOR_NATURAL_SCALE = {"C3", "D", "D#", "F", "G", "G#", "B", "C4"};
   final private int DEFAULT_PLAYER_BUFFER = 512; 
   private String path = "data/";
   private String extension = ".wav"; 

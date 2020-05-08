@@ -22,6 +22,7 @@ void initVariables() {
   bubbleId = 0;
   debugOn = false; 
   startVisualisation = false;  
+  minim = new Minim(this); 
 }
 
 void setupTools(){
@@ -36,7 +37,6 @@ void setup() {
   initMode();
   initVariables(); 
   setupTools(); 
-   minim = new Minim(this); 
 }
 
 synchronized void setupMainDrawing(){

@@ -138,7 +138,8 @@ class PeopleVisualisation{
     
     updateXPosition();
     if(isTouchingPeople() > -1){
-      melodyMaster.update(isTouchingPeople()); //todo make that nicer
+      int note = listOfPeople[isTouchingPeople()];
+      melodyMaster.update(note); //todo make that nicer
     }
     drawLine(app); 
   }

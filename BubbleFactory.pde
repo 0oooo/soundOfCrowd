@@ -4,9 +4,9 @@ class BubbleFactory {
   
   private void randomBubbleGenerator(){
     print(" Adding a new bubble "); 
-    int first = (int)(Math.random() * 120 + 100); // 120 = max and 100 = min
-    int second = (int)(Math.random() * 400 + 100);
-    int third = (int)(Math.random() * 30 + 20);
+    int first = (int)(Math.random() * 1000 + 10); // 120 = max and 100 = min
+    int second = (int)(Math.random() * 1000 + 10);
+    int third = (int)(Math.random() * 15 + 5);
     bubbleManager.addBubble(new Bubble(first, second, third, bubbleId));
   }
   
@@ -23,6 +23,5 @@ class BubbleFactory {
         }
         print("\n"); 
   }
-  
   
 }

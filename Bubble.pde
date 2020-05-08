@@ -5,14 +5,10 @@
 class Bubble{
   private PVector position;
   private PVector velocity;
- 
   private float radius, m;
-  
   private int id; 
+  private BubbleSoundGenerator sound; 
 
-  public int getId(){
-    return id; 
-  }
   public Bubble(float x, float y, float r_, int id) {
     position = new PVector(x, y);
     velocity = PVector.random2D();
@@ -20,23 +16,37 @@ class Bubble{
     radius = r_;
     m = radius*.1;
     this.id = id; 
+    sound = new BubbleSoundGenerator(); 
+  }
+  
+  public int getId(){
+    return id; 
   }
   
   private void update() {
     position.add(velocity);
   }
   
+  private void makeSound(){
+    int randomNum = (int)(Math.random() * 7 + 1); // 7 = max and 1 = min
+    sound.playNote(randomNum); 
+  }
+  
   private void checkBoundaryCollision(int bottomBubbleProjection) {
     if (position.x > width-radius) {
+      
       position.x = width-radius;
       velocity.x *= -1;
     } else if (position.x < radius) {
+   
       position.x = radius;
       velocity.x *= -1;
     } else if (position.y > bottomBubbleProjection-radius) {
+
       position.y = bottomBubbleProjection-radius;
       velocity.y *= -1;
     } else if (position.y < radius) {
+    
       position.y = radius;
       velocity.y *= -1;
     }
@@ -54,6 +64,7 @@ class Bubble{
     float minDistance = radius + other.radius;
 
     if (distanceVectMag < minDistance) {
+     print("touuuuuching");
       float distanceCorrection = (minDistance-distanceVectMag)/2.0;
       PVector d = distanceVect.copy();
       PVector correctionVector = d.normalize().mult(distanceCorrection);
