@@ -12,7 +12,7 @@ class BubbleFactory {
     if(debugOn)
       print(" Adding a new bubble ");
     
-    float first = random (0, TOTAL_WIDTH + 1); // 120 = max and 100 = min
+    float first = random (0, TOTAL_WIDTH + 1); 
     float second = random (0, HEIGHT_START_WINDOW + 1);
     float third = random (5, 15);
     bubbleManager.addBubble(new Bubble(first, second, third, bubbleId, debugOn));
@@ -27,7 +27,7 @@ class BubbleFactory {
           if(debugOn)
              print(peopleDetectionFrequency[i] + " "); 
           if(peopleDetectionFrequency[i] >= DETECTION_FREQUENCY_THRESHOLD){ 
-              randomBubbleGenerator(); // add on a different thread?
+              randomBubbleGenerator(); 
               bubbleId++;
               peopleDetectionFrequency[i] = 0; 
           }
