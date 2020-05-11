@@ -37,6 +37,7 @@ class BubbleManager extends Thread{
       printedDebugMode = true; 
     }
     this.debugOn = true; 
+    bubbleFactory.setDebugOn(); 
   }
   
   public void setDebugOff(){

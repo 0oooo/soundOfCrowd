@@ -155,6 +155,7 @@ class PeopleVisualisation{
       printedDebugMode = true; 
     }
     this.debugOn = true; 
+    melodyMaster.setDebugOn(); 
   }
   
   private void printLeftSideOfPeople(){

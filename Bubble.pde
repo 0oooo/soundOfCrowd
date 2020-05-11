@@ -10,24 +10,20 @@ class Bubble{
   private BubbleSoundGenerator sound; 
   private boolean debugOn; 
 
-  public Bubble(float x, float y, float r_, int id) {
+  public Bubble(float x, float y, float r_, int id, boolean debugOn) {
     position = new PVector(x, y);
     velocity = PVector.random2D();
     //velocity.mult(3);
     radius = r_;
     m = radius*.1;
     this.id = id; 
-    sound = new BubbleSoundGenerator(); 
-    debugOn = false; 
+    sound = new BubbleSoundGenerator(debugOn); 
   }
   
   public int getId(){
     return id; 
   }
-  
-  public void debugOn(){
-    debugOn = true; 
-  }
+
   
   private void update() {
     position.add(velocity);

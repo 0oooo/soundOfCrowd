@@ -38,5 +38,4 @@ void setDebugOn(){
    }
    bubbleManager.setDebugOn();
    peopleVisualisation.setDebugOn(); 
-    soundPlayer.setDebugOn();
 }

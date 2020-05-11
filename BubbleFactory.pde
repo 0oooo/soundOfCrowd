@@ -2,26 +2,42 @@
 
 class BubbleFactory {
   
+  private boolean debugOn; 
+  
+  public BubbleFactory(){
+    debugOn = false; 
+  }
+  
   private void randomBubbleGenerator(){
-    print(" Adding a new bubble "); 
-    int first = (int)(Math.random() * 1000 + 10); // 120 = max and 100 = min
-    int second = (int)(Math.random() * 1000 + 10);
-    int third = (int)(Math.random() * 15 + 5);
-    bubbleManager.addBubble(new Bubble(first, second, third, bubbleId));
+    if(debugOn)
+      print(" Adding a new bubble ");
+    
+    float first = random (0, TOTAL_WIDTH + 1); // 120 = max and 100 = min
+    float second = random (0, HEIGHT_START_WINDOW + 1);
+    float third = random (5, 15);
+    bubbleManager.addBubble(new Bubble(first, second, third, bubbleId, debugOn));
   }
   
   public void createBubble(){
-      print("DETECTION_FREQUENCY_THRESHOLD =", DETECTION_FREQUENCY_THRESHOLD); 
-      print("\nDetected: "); 
+    if(debugOn){
+        print("DETECTION_FREQUENCY_THRESHOLD =", DETECTION_FREQUENCY_THRESHOLD); 
+        print("\nDetected: ");
+    }
         for(int i = 0; i < peopleDetectionFrequency.length; i++){
-           print(peopleDetectionFrequency[i] + " "); 
+          if(debugOn)
+             print(peopleDetectionFrequency[i] + " "); 
           if(peopleDetectionFrequency[i] >= DETECTION_FREQUENCY_THRESHOLD){ 
-              randomBubbleGenerator(); 
+              randomBubbleGenerator(); // add on a different thread?
               bubbleId++;
               peopleDetectionFrequency[i] = 0; 
           }
         }
-        print("\n"); 
+        if(debugOn)
+          print("\n"); 
+  }
+  
+  public void setDebugOn(){
+    debugOn = true; 
   }
   
 }
