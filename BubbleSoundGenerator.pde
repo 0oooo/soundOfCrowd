@@ -6,17 +6,21 @@
 
 class BubbleSoundGenerator{
   
-  final private String[] C_MINOR_NATURAL_SCALE = {"C3", "D", "D#", "F", "G", "G#", "B", "C4"};
+  final private String[] C_MINOR_NATURAL_SCALE = {"a", "a#","b", "c","c#", "d","d#","e","f", "f#","g", "g#"};
   final private int DEFAULT_PLAYER_BUFFER = 512; 
-  private String path = "data/";
+  private String path = "data/bubbles/bubble-sample-";
   private String extension = ".wav"; 
-  private AudioSample[] players;
-  private boolean played; 
+  private AudioSample[] players; 
+  private boolean debugOn; 
   
   public BubbleSoundGenerator(){
     players = new AudioSample[C_MINOR_NATURAL_SCALE.length];
     loadAllSample(); 
-    played = false; 
+    debugOn = false; 
+  }
+  
+  public void setDebugOn(){
+    debugOn  = true; 
   }
   
   private void loadAllSample(){
@@ -31,7 +35,9 @@ class BubbleSoundGenerator{
   
   public void playNote (int notePosition){
     AudioSample note = players[notePosition];
-    println("Note played is" + C_MINOR_NATURAL_SCALE[notePosition] );
+    if(debugOn){
+      println("Note played is" + C_MINOR_NATURAL_SCALE[notePosition] );
+    }
     note.trigger(); 
   }
 }

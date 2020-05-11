@@ -35,8 +35,8 @@ void showKinectVideo(){
 
 void setupDefaultPeople(){
   println("Setting up the default array of people."); 
-  //int[] defaultPeople = {0, 4, 5, 2, 7, 1, 7, 2};
-  int[] defaultPeople = {0, 0, 0, 0, 0, 0, 0, 1};
+  int[] defaultPeople = {0, 4, 5, 2, 7, 1, 7, 2};
+  //int[] defaultPeople = {0, 0, 0, 0, 0, 0, 0, 1};
   peopleToBeat = defaultPeople;
   lastPeopleDetected = peopleToBeat; 
 }

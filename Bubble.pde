@@ -8,6 +8,7 @@ class Bubble{
   private float radius, m;
   private int id; 
   private BubbleSoundGenerator sound; 
+  private boolean debugOn; 
 
   public Bubble(float x, float y, float r_, int id) {
     position = new PVector(x, y);
@@ -17,10 +18,15 @@ class Bubble{
     m = radius*.1;
     this.id = id; 
     sound = new BubbleSoundGenerator(); 
+    debugOn = false; 
   }
   
   public int getId(){
     return id; 
+  }
+  
+  public void debugOn(){
+    debugOn = true; 
   }
   
   private void update() {
@@ -28,7 +34,7 @@ class Bubble{
   }
   
   private void makeSound(){
-    int randomNum = (int)(Math.random() * 7 + 1); // 7 = max and 1 = min
+    int randomNum = (int) random(12); // 7 = max and 1 = min
     sound.playNote(randomNum); 
   }
   
@@ -64,7 +70,7 @@ class Bubble{
     float minDistance = radius + other.radius;
 
     if (distanceVectMag < minDistance) {
-     print("touuuuuching");
+      makeSound();
       float distanceCorrection = (minDistance-distanceVectMag)/2.0;
       PVector d = distanceVect.copy();
       PVector correctionVector = d.normalize().mult(distanceCorrection);

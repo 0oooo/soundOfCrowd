@@ -64,8 +64,8 @@ class BubbleManager extends Thread{
   
   private void checkCollision(Bubble bubble){
    for(Map.Entry bubbleInMap : bubblesMap.entrySet()){
-     if(bubble.getId() != bubbleInMap.getId()){
-        Bubble otherBubble = (Bubble) bubbleInMap.getValue(); 
+     Bubble otherBubble = (Bubble) bubbleInMap.getValue(); 
+     if(bubble.getId() != otherBubble.getId()){
         bubble.checkCollision(otherBubble);
      }
     }
