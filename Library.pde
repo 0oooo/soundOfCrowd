@@ -1,4 +1,32 @@
 //------------------------------------------------------------
+//-------------------------SETUP-----------------------
+//------------------------------------------------------------
+
+void initVariables() {
+  startTime = second(); 
+  peopleToBeat = new int[NUMBER_OF_BEATS];
+  lastPeopleDetected = new int[NUMBER_OF_BEATS];
+  peopleDetectionFrequency = new int[NUMBER_OF_BEATS];
+  bubbleId = 0;
+  debugOn = false; 
+  startVisualisation = false;  
+  minim = new Minim(this); 
+}
+
+void setupTools(){
+  setupPeopleVisualisation();
+  setupBubbles();
+  setupKinectDetection(); 
+  secondWinSetup();
+}
+
+synchronized void setupMainDrawing(){
+  background(255);
+  strokeWeight(1);
+  stroke(126);
+}
+
+//------------------------------------------------------------
 //-------------------------KINECT SETUP-----------------------
 //------------------------------------------------------------
 
@@ -35,8 +63,8 @@ void showKinectVideo(){
 
 void setupDefaultPeople(){
   println("Setting up the default array of people."); 
-  int[] defaultPeople = {0, 4, 5, 2, 7, 1, 7, 2};
-  //int[] defaultPeople = {0, 0, 0, 0, 0, 0, 0, 1};
+  //int[] defaultPeople = {0, 4, 5, 2, 7, 1, 7, 2};
+  int[] defaultPeople = {0, 5, 0, 0, 0, 0, 0, 1};
   peopleToBeat = defaultPeople;
   lastPeopleDetected = peopleToBeat; 
 }

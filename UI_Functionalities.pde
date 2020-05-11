@@ -39,3 +39,23 @@ void setDebugOn(){
    bubbleManager.setDebugOn();
    peopleVisualisation.setDebugOn(); 
 }
+
+//------------------------------------------------------------
+//-------------------------SECOND WIDNDOW---------------------
+//------------------------------------------------------------
+
+
+void secondWinSetup(){
+  musicWindow = GWindow.getWindow(this, "Music Visualisation", 320, 650, 640, 200, JAVA2D);
+  musicWindow.addDrawHandler(this, "makeMusicWindow");
+}
+
+void makeMusicWindow(PApplet app, GWinData windata){
+  app.background(255);
+  app.strokeWeight(1);
+  app.stroke(126);
+  app.fill(0); 
+  if(startVisualisation){
+    makeMelody(app);
+  }
+}

@@ -14,35 +14,11 @@ import g4p_controls.*;
 //-------------------------SETUP-----------------------
 //------------------------------------------------------------
 
-void initVariables() {
-  startTime = second(); 
-  peopleToBeat = new int[NUMBER_OF_BEATS];
-  lastPeopleDetected = new int[NUMBER_OF_BEATS];
-  peopleDetectionFrequency = new int[NUMBER_OF_BEATS];
-  bubbleId = 0;
-  debugOn = false; 
-  startVisualisation = false;  
-  minim = new Minim(this); 
-}
-
-void setupTools(){
-  setupPeopleVisualisation();
-  setupBubbles();
-  setupKinectDetection(); 
-  secondWinSetup();
-}
-
 void setup() {
   size(640, 480);
   initMode();
   initVariables(); 
   setupTools(); 
-}
-
-synchronized void setupMainDrawing(){
-  background(255);
-  strokeWeight(1);
-  stroke(126);
 }
 
 
@@ -110,25 +86,5 @@ void keyPressed() {
     } else{
       selectedMode = selectedMode + key;
     }
-  }
-}
-
-//------------------------------------------------------------
-//-------------------------SECOND WIDNDOW---------------------
-//------------------------------------------------------------
-
-
-void secondWinSetup(){
-  musicWindow = GWindow.getWindow(this, "Music Visualisation", 320, 650, 640, 200, JAVA2D);
-  musicWindow.addDrawHandler(this, "makeMusicWindow");
-}
-
-void makeMusicWindow(PApplet app, GWinData windata){
-  app.background(255);
-  app.strokeWeight(1);
-  app.stroke(126);
-  app.fill(0); 
-  if(startVisualisation){
-    makeMelody(app);
   }
 }

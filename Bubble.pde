@@ -7,8 +7,9 @@ class Bubble{
   private PVector velocity;
   private float radius, m;
   private int id; 
-  private BubbleSoundGenerator sound; 
-  private boolean debugOn; 
+  private BubbleSoundGenerator sound;  
+  
+  PImage bubble;
 
   public Bubble(float x, float y, float r_, int id, boolean debugOn) {
     position = new PVector(x, y);
@@ -18,6 +19,9 @@ class Bubble{
     m = radius*.1;
     this.id = id; 
     sound = new BubbleSoundGenerator(debugOn); 
+    
+      bubble = loadImage( "data/img/bubble3.png");
+      bubble.resize(round(radius*2 - 1), round(radius*2 - 1)); 
   }
   
   public int getId(){
@@ -30,7 +34,7 @@ class Bubble{
   }
   
   private void makeSound(){
-    int randomNum = (int) random(12); // 7 = max and 1 = min
+    int randomNum = (int) random(12); 
     sound.playNote(randomNum); 
   }
   
@@ -153,9 +157,10 @@ class Bubble{
   private void display() {
     noStroke();
     fill(204);
-    ellipse(position.x, position.y, radius*2, radius*2);
-    fill(0, 102, 153);
-    text(id, position.x, position.y);
-    fill(0, 102, 153);
+    //ellipse(position.x, position.y, radius*2, radius*2);
+    image(bubble, position.x,  position.y);
+    //fill(0, 102, 153);
+    //text(id, position.x, position.y);
+    //fill(0, 102, 153);
   }
 }
