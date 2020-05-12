@@ -11,7 +11,6 @@ class PeopleVisualisation{
   private float xPosition; 
   private int widthProjection; 
   private int[] listOfPeople; 
-  //private float[] peopleSlotsLeftestPoint; 
   private int[] leftSideOfPeople; 
   private boolean[] hasSomeoneIn; 
   private float widthOfPeopleSlot; 
@@ -88,6 +87,8 @@ class PeopleVisualisation{
         app.ellipse(getXPosition(i), getYPosition(listOfPeople[i]), radius*2, radius*2);
         
         hasSomeoneIn[i] = true; 
+      } else{
+        hasSomeoneIn[i] = false;
       }
     }
   }
@@ -137,7 +138,7 @@ class PeopleVisualisation{
     drawPeople(app);
     
     updateXPosition();
-    if(isTouchingPeople() > -1){
+    if(isTouchingPeople() > 0){
       int note = listOfPeople[isTouchingPeople()];
       melodyMaster.update(note); //todo make that nicer
     }

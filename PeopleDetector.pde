@@ -7,8 +7,8 @@
 
 class PeopleDetector {
 
-  private final int THRESHOLD_DEPTH_DETECTION_MAX = 1000;
-  private final int THRESHOLD_DEPTH_DETECTION_MIN = 0;
+  private final int THRESHOLD_DEPTH_DETECTION_MAX = 900;
+  private final int THRESHOLD_DEPTH_DETECTION_MIN = 700;
   private final double THRESHOLD_PIXELS_NOT_IN_DETECTED_ZONE = 0.3; 
   private final int numberOfPixels;
 
@@ -90,7 +90,7 @@ class PeopleDetector {
     if(debugOn){
       printDepth();
     }
-    
+    reverseList();
     return depthAsListOfBeats;
   }
 
@@ -113,19 +113,19 @@ class PeopleDetector {
     int maxScaledDepth = numberOfBeats; 
     int maxMinusMin = THRESHOLD_DEPTH_DETECTION_MAX - THRESHOLD_DEPTH_DETECTION_MIN; 
     int currentDepthMinusMin = currentDepth - THRESHOLD_DEPTH_DETECTION_MIN;
-    //todo replace by map : round(map(currentDepth, THRESHOLD_DEPTH_DETECTION_MIN, THRESHOLD_DEPTH_DETECTION_MAX, 1, 8))
-    return Math.round((currentDepthMinusMin * maxScaledDepth) / maxMinusMin); 
+    //todo replace by map : round(map(currentDepth, THRESHOLD_DEPTH_DETECTION_MIN, THRESHOLD_DEPTH_DETECTION_MAX, 1, 7))
+    //return Math.round((currentDepthMinusMin * maxScaledDepth) / maxMinusMin);
+    return (int) map(currentDepth, THRESHOLD_DEPTH_DETECTION_MIN, THRESHOLD_DEPTH_DETECTION_MAX, 1, 7);
   }
 
-  public void draw(boolean showVideo) {
+  synchronized public void draw(boolean showVideo) {
     // Get the raw depth as array of integers
     rawDepth = kinect.getRawDepth();
 
     for (int i=0; i < rawDepth.length; i++) {
       if (rawDepth[i] >= THRESHOLD_DEPTH_DETECTION_MIN && rawDepth[i] <= THRESHOLD_DEPTH_DETECTION_MAX) {
-        //scaledDepthPerPixel[i] = 1; // to do = replace that by the depth
         scaledDepthPerPixel[i] = getDepthScaled(rawDepth[i]);
-        depthImg.pixels[i] = color(255);
+        depthImg.pixels[i] = color(130, 168, 222);
       } else {
         scaledDepthPerPixel[i] = 0; 
         depthImg.pixels[i] = color(0);
@@ -133,7 +133,9 @@ class PeopleDetector {
     }
 
     if (showVideo) {
-      drawVideo();
+      depthImg.updatePixels();
+      image(depthImg,0, 0);
+      fill(0);
     }
   }
 
@@ -144,10 +146,10 @@ class PeopleDetector {
 
   public void drawVideo() {
     // Draw the raw image
-    image(kinect.getDepthImage(), 0, 0); 
+    //image(kinect.getDepthImage(), 0, 0); 
 
     depthImg.updatePixels();
-    image(depthImg, kinect.width, 0);
+    image(depthImg,0, 0);
     fill(0);
   }
 

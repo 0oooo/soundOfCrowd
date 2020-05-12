@@ -14,7 +14,7 @@ class BubbleFactory {
     
     float first = random (0, TOTAL_WIDTH + 1); 
     float second = random (0, HEIGHT_START_WINDOW + 1);
-    float third = random (5, 15);
+    float third = random (20, 45);
     bubbleManager.addBubble(new Bubble(first, second, third, bubbleId, debugOn));
   }
   
